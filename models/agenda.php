@@ -21,10 +21,6 @@ class AgendaModel extends Database {
         parent::close_connection();
         return $data; 
     }
-
-    function delete_by_ci(){
-        
-    }
 }
 
 ?>

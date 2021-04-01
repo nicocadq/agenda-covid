@@ -38,6 +38,13 @@ class UserModel extends Database {
         $statement->close();
         return $data; 
     }
+
+    function delete_by_ci($ci){
+        $sql_query = 'UPDATE usuario SET activo='. 0 .' WHERE idUsuario='. $ci;
+        $affected_rows = parent::update_data($sql_query);
+        parent::close_connection();
+        return $affected_rows == 1; 
+    }
 }
 
 ?>

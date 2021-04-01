@@ -1,6 +1,7 @@
 <?php
 
 include_once '../models/agenda.php';
+include_once '../models/user.php';
 
 header('Content-Type: application/json');
 
@@ -9,6 +10,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch($method){
     case 'GET': 
         get();
+        break;
+    case 'POST': 
+        post();
         break;
     default:
         http_response_code(404);
@@ -46,32 +50,43 @@ function get() {
     }
 }
 
-// function post(){
-//     $user = new UserModel();
-//     $agenda = new AgendaModel();
+function post(){
+    $agenda = new AgendaModel();
+    $user = new UserModel();
 
-//     $tel = isset($_POST['tel']) ? $_POST['tel'] : null;
-    
-//     if($tel){
-//         $ci = $_GET['ci'];
+    if(isset($_GET['ci'])) {
+        $ci_param = $_GET['ci'];
 
-//         $added = $user->add_telephone($ci, $tel);
-//         $created = $agenda->create($ci);
+        $dates = $agenda->get_by_ci($ci_param);
+        $first_date = strtotime($dates[0]['fechaV1']);
 
-//         if($added && $created){
-//             http_response_code(200);
-//             echo json_encode(true, JSON_PRETTY_PRINT);
-//         } else {
-//             http_response_code(400);
-//             echo json_encode(
-//                 [ 'error' => 'Invalid CI or Tel'], 
-//                 JSON_PRETTY_PRINT
-//             );
-//         }
-//     } else {
-//         http_response_code(400);
-//         echo json_encode(['error' => 'Missing Tel param'], JSON_PRETTY_PRINT);
-//     }
-// }
+        $current_date = strtotime(date('Y-m-d'));
+
+        if($dates){
+            if($first_date > $current_date){
+                $deleted = $user->delete_by_ci($ci_param);
+                
+                if($deleted){
+                    http_response_code(200);
+                    echo json_encode(true, JSON_PRETTY_PRINT);
+                }
+            }else {
+                http_response_code(400);
+                echo json_encode([ 'error' => 'current:' .$current_date. ' first:'. $first_date] , JSON_PRETTY_PRINT);
+            }
+        }else {
+            http_response_code(404);
+            echo json_encode(
+                [ 'error' => 'Invalid CI'], 
+                JSON_PRETTY_PRINT
+            );
+        }        
+
+        
+    } else {                    
+        http_response_code(400);
+        echo json_encode([ 'error' => 'Missing CI param'] , JSON_PRETTY_PRINT);
+    }
+}
 
 ?>

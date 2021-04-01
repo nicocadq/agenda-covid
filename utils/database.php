@@ -4,7 +4,7 @@ class Database {
     private $server = 'localhost';
     private $user = 'root';
     private $password = '';
-    private $database = 'agenda-covid';
+    private $database = 'agenda_covid';
     private $connection = false;
 
     function __construct() {

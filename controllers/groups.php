@@ -10,30 +10,40 @@ switch($method){
     case 'GET': 
         get();
         break;
-    case 'POST':
-        post();
     default:
-        echo 'Unabled method.';
+        http_response_code(404);
+        echo json_encode(['error' => 'Unabled method.'], JSON_PRETTY_PRINT);
         break;
 }
 
 function get() {
     $model = new GroupModel();
 
-    if(isset($_GET['id'])) {
+    $action = $_GET['action'] ?? null;
+
+    if($action == 'groups') {
+        $groups_from_db = $model->get_count_by_group();
+        $groups = [];
+        
+        foreach($groups_from_db as $group){
+            $groups[] = [
+                'idGroup' => $group['idGrupo'],
+                'name' => $group['nombre'],
+                'count' => $group['COUNT(*)'],
+            ];
+        }
+
+        http_response_code(200);
+        echo json_encode($groups, JSON_PRETTY_PRINT);
+    } elseif($action == 'ages') {
+        http_response_code(200);
+        echo json_encode("no", JSON_PRETTY_PRINT);
+    }else{
+        http_response_code(404);
         echo json_encode(
-            'TODO: handle GET /{id} ... currently receving:'. $_GET['id'], 
+            [ 'error' => 'Invalid action, avilable GROUPS and AGES'], 
             JSON_PRETTY_PRINT
         );
-    } else {                    
-        $groups = $model->get_all();
-        echo json_encode($groups, JSON_PRETTY_PRINT);
     }
 }
-
-function post(){
-    echo json_encode("esto es un post", JSON_PRETTY_PRINT);
-}
-
-
 ?>

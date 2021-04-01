@@ -35,7 +35,8 @@
                         <div class="navbar-end">
                             <a class="navbar-item" href="./new.php">Agendarme</a>
                             <a class="navbar-item is-active" href="./show.php">Consultar agenda</a>
-                            <a class="navbar-item">Listar</a>
+                            <a class="navbar-item" href="./delete.php">Borrar consulta</a>
+                            <a class="navbar-item" href="./list.php">Grupos</a>
                         </div>
                     </div>
                 </div>
