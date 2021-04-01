@@ -4,8 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AGENDA COVID - Agendarme</title>
+    <title>AGENDA COVID - Consultar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+
+    <style>
+
+    </style>
+
 </head>
 
 <body>
@@ -28,8 +33,8 @@
                     </div>
                     <div id="nav-menu" class="navbar-menu nav-menu">
                         <div class="navbar-end">
-                            <a class="navbar-item is-active" href="./new.php">Agendarme</a>
-                            <a class="navbar-item" href="./show.php">Consultar agenda</a>
+                            <a class="navbar-item" href="./new.php">Agendarme</a>
+                            <a class="navbar-item is-active" href="./show.php">Consultar agenda</a>
                             <a class="navbar-item">Listar</a>
                         </div>
                     </div>
@@ -38,9 +43,9 @@
         </div>
 
         <div class="hero-body">
-            <div class="container ">
+            <div class="container">
                 <p class="title">
-                    Crear nueva consulta
+                    Consultar agenda
                 </p>
                 <div class="box">
                     <form id="check">
@@ -58,22 +63,12 @@
                             encuentra en el sistema.
                         </p>
                     </form>
-                    <form id="add-tel" style="display: none; margin-top: 3rem;">
-                        <div class="message is-primary" style="margin-bottom: 0;">
-                            <div class="message-header">
-                                <p>Se ha verificado su cedula correctamente</p>
-                            </div>
+                    <div id="dates" class="block" style="display: none; margin-top: 1rem;">
+                        <div class="notification is-success">
+                            <p>Primera Fecha : <span id="first-date"></span></p>
+                            <p>Segunda Fecha : <span id="second-date"></span></p>
                         </div>
-                        <label class="label text-white" for="tel">Agrega tu telefono de contacto</label>
-                        <div class="field has-addons">
-                            <div class="control">
-                                <input class="input" id="tel" name="tel" type="tel" placeholder="Ej. 093674532">
-                            </div>
-                            <div class="control">
-                                <button class="button is-link" type="button">Submit</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,12 +80,13 @@
     const checkCiSubmitButton = document.querySelector('form#check button');
     const getCiValue = () => document.querySelector('form#check input#ci').value;
 
-    const checkRequest = async (ci) => {
+    const getDatesRequest = async (ci) => {
         try {
-            const response = await fetch(`../controllers/users.php?ci=${ci}`);
+            const response = await fetch(`../controllers/agenda.php?ci=${ci}`);
             const data = await response.json();
             if (!data.error) {
-                return true;
+                console.log(data)
+                return data;
             } else {
                 throw new Error(data.error);
             }
@@ -108,56 +104,28 @@
         invalidMessage.style.display = 'block';
     }
 
-    const showAddTelForm = () => {
-        const addTelForm = document.querySelector('form#add-tel');
-        addTelForm.style.display = 'block';
+    const showDates = (first, second) => {
+        const firstDateContainer = document.querySelector('div#dates span#first-date');
+        const secondDateContainer = document.querySelector('div#dates span#second-date');
+        const datesContainer = document.querySelector('div#dates');
+
+        firstDateContainer.innerHTML = first;
+        secondDateContainer.innerHTML = second;
+
+        datesContainer.style.display = 'block';
     }
 
     checkCiSubmitButton.addEventListener('click', async () => {
         const ci = getCiValue();
-        const isValid = await checkRequest(ci);
-        if (isValid) {
-            showAddTelForm();
+        const dates = await getDatesRequest(ci);
+        if (dates) {
+            showDates(dates.dateV1, dates.dateV2);
         } else {
             showInvalidCiMessage();
         }
     });
     </script>
 
-    <script>
-    const addTelForm = document.querySelector('form#add-tel');
-    const addTelSubmitButton = document.querySelector('form#add-tel button');
-
-    const addTelRequest = async (ci) => {
-        try {
-            const formData = new FormData(addTelForm);
-            const response = await fetch(`../controllers/users.php?ci=${ci}`, {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-            if (!data.error) {
-                return true;
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
-
-    addTelSubmitButton.addEventListener('click', async () => {
-        const ci = getCiValue();
-        const added = await addTelRequest(ci);
-        if (added) {
-            // TODO: Add this methods
-            // showSuccessTelMessage();
-        } else {
-            // showErrorTelMessage();
-        }
-    });
-    </script>
 </body>
 
 </html>

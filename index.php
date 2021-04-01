@@ -20,7 +20,7 @@
             <header class="navbar">
                 <div class="container">
                     <div class="navbar-brand">
-                        <a class="navbar-item">
+                        <a class="navbar-item" href="./">
                             AGENDA COVID
                         </a>
                         <!-- TODO: Add functionality to burger-menu -->
@@ -34,7 +34,7 @@
                     <div id="nav-menu" class="navbar-menu nav-menu">
                         <div class="navbar-end">
                             <a class="navbar-item" href="views/new.php">Agendarme</a>
-                            <a class="navbar-item">Consultar agenda</a>
+                            <a class="navbar-item" href="views/show.php">Consultar agenda</a>
                             <a class="navbar-item">Listar</a>
                         </div>
                     </div>
