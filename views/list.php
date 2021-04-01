@@ -65,7 +65,7 @@
                     <p class="subtitle">
                         Cantidad por edad
                     </p>
-                    <table class="table is-bordered is-striped is-narrow is-fullwidth">
+                    <table id="count-by-ages" class="table is-bordered is-striped is-narrow is-fullwidth">
                         <thead>
                             <tr>
                                 <th>Grupo</th>
@@ -99,10 +99,10 @@
 
     const getCountByAgeRequest = async () => {
         try {
-            const response = await fetch(`../controllers/agenda.php?ci=${ci}`);
+            const response = await fetch(`../controllers/groups.php?action=ages`);
             const data = await response.json();
             if (!data.error) {
-                return true;
+                return data;
             } else {
                 throw new Error(data.error);
             }
@@ -132,6 +132,13 @@
             count
         }) => twoColumnsTableRow(name, count));
         addRowsToTable('count-by-groups', byGroupColumns);
+
+        const countByAges = await getCountByAgeRequest();
+        const byAgeColumns = countByAges.map(({
+            name,
+            count
+        }) => twoColumnsTableRow(name, count));
+        addRowsToTable('count-by-ages', byAgeColumns);
     });
     </script>
 

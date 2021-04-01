@@ -23,21 +23,31 @@ function get() {
 
     if($action == 'groups') {
         $groups_from_db = $model->get_count_by_group();
-        $groups = [];
+        $count_groups = [];
         
         foreach($groups_from_db as $group){
-            $groups[] = [
+            $count_groups[] = [
                 'idGroup' => $group['idGrupo'],
                 'name' => $group['nombre'],
-                'count' => $group['COUNT(*)'],
+                'count' => $group['cantidad'],
             ];
         }
 
         http_response_code(200);
-        echo json_encode($groups, JSON_PRETTY_PRINT);
+        echo json_encode($count_groups, JSON_PRETTY_PRINT);
     } elseif($action == 'ages') {
+        $ages_from_db = $model->get_count_by_age();
+        $count_ages = [];
+        
+        foreach($ages_from_db as $age){
+            $count_ages[] = [
+                'name' => $age['grupo'],
+                'count' => $age['cantidad'],
+            ];
+        }
+
         http_response_code(200);
-        echo json_encode("no", JSON_PRETTY_PRINT);
+        echo json_encode($count_ages, JSON_PRETTY_PRINT);
     }else{
         http_response_code(404);
         echo json_encode(
