@@ -1,14 +1,10 @@
 <!-- 
 Agendarme ingresando CI
 
-a. Si estoy ingresado en la tabla “Usuario” me tiene que solicitar teléfono
-para agendar el cual se debe persistir en la tabla. El sistema tiene que
+El sistema tiene que
 ingresar la fechaV1 la siguiente semana de la acción y fechaV2 un
 mes luego de la fechaV1. Ej: Ingreso de la agenda el 2021-03-19 |
 fechaV1: 2021-03-26 | fechaV2: 2021-04-26
-
-b. Si NO estoy ingresado en la tabla “Usuario”, el sistema me lo debe
-indicar 
 
 -->
 
@@ -92,7 +88,7 @@ indicar
     <script>
     const checkCiForm = document.querySelector('form#check');
     const checkCiSubmitButton = document.querySelector('form#check button');
-    const getCiValue = () => document.querySelector('input#ci').value;
+    const getCiValue = () => document.querySelector('form#check input#ci').value;
 
     const checkRequest = async (ci) => {
         try {
@@ -129,6 +125,41 @@ indicar
             showAddTelForm();
         } else {
             showInvalidCiMessage();
+        }
+    });
+    </script>
+
+    <script>
+    const addTelForm = document.querySelector('form#add-tel');
+    const addTelSubmitButton = document.querySelector('form#add-tel button');
+
+    const addTelRequest = async (ci) => {
+        try {
+            const formData = new FormData(addTelForm);
+            const response = await fetch(`../controllers/users.php?ci=${ci}`, {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            if (!data.error) {
+                return true;
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    addTelSubmitButton.addEventListener('click', async () => {
+        const ci = getCiValue();
+        const added = await addTelRequest(ci);
+        if (added) {
+            // TODO: Add this methods
+            // showSuccessTelMessage();
+        } else {
+            // showErrorTelMessage();
         }
     });
     </script>

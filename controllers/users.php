@@ -1,6 +1,7 @@
 <?php
 
 include_once '../models/user.php';
+include_once '../models/agenda.php';
 
 header('Content-Type: application/json');
 
@@ -12,19 +13,20 @@ switch($method){
         break;
     case 'POST':
         post();
+        break;
     default:
         http_response_code(404);
-        echo 'Unabled method.';
+        echo json_encode(['error' => 'Unabled method.'], JSON_PRETTY_PRINT);
         break;
 }
 
 function get() {
-    $model = new UserModel();
+    $user = new UserModel();
 
     if(isset($_GET['ci'])) {
         $ci_param = $_GET['ci'];
 
-        $is_valid = $model->get_ci($ci_param);
+        $is_valid = $user->get_ci($ci_param);
 
         if($is_valid){
             http_response_code(200);
@@ -48,8 +50,31 @@ function get() {
 }
 
 function post(){
-    echo json_encode("esto es un post", JSON_PRETTY_PRINT);
-}
+    $user = new UserModel();
+    $agenda = new AgendaModel();
 
+    $tel = isset($_POST['tel']) ? $_POST['tel'] : null;
+    
+    if($tel){
+        $ci = $_GET['ci'];
+
+        $added = $user->add_telephone($ci, $tel);
+        $created = $agenda->create($ci);
+
+        if($added && $created){
+            http_response_code(200);
+            echo json_encode(true, JSON_PRETTY_PRINT);
+        } else {
+            http_response_code(400);
+            echo json_encode(
+                [ 'error' => 'Invalid CI or Tel'], 
+                JSON_PRETTY_PRINT
+            );
+        }
+    } else {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing Tel param'], JSON_PRETTY_PRINT);
+    }
+}
 
 ?>

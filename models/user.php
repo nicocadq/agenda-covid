@@ -21,8 +21,22 @@ class UserModel extends Database {
         return $data; 
     }
 
-    function add_telephone(){
-       
+    function add_telephone($ci, $tel){
+        $data = false;
+        
+        $sql_query = 'UPDATE usuario SET telefono=? WHERE idUsuario=?';
+        $statement = parent::get_connection()->prepare($sql_query);
+        $statement->bind_param('is', $tel, $ci);
+
+        if($statement->execute()){
+            $statement->store_result();
+            if($statement->affected_rows == 1){
+                $data = true;
+            }
+        }
+
+        $statement->close();
+        return $data; 
     }
 }
 
