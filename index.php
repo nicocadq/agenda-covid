@@ -23,7 +23,6 @@
                         <a class="navbar-item" href="./">
                             AGENDA COVID
                         </a>
-                        <!-- TODO: Add functionality to burger-menu -->
                         <span role="button" id="nav-toggle" class="navbar-burger nav-toggle" data-target="navMenu"
                             aria-label="menu" aria-expanded="false">
                             <span aria-hidden="true"></span>
