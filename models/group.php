@@ -24,9 +24,9 @@ class GroupModel extends Database {
                     WHEN (TIMESTAMPDIFF(YEAR,fechaNacimiento,CURDATE()) BETWEEN 51 AND 65) THEN 'De 51 a 65'
                 END as grupo,
             COUNT(*) as cantidad
-            FROM usuario
+            FROM usuario INNER JOIN agenda ON agenda.idUsuario=usuario.IdUsuario
             GROUP BY grupo";
-
+        
         $data = parent::get_data($sql_query);
         parent::close_connection();
         return $data; 
