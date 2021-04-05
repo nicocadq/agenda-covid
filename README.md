@@ -5,6 +5,7 @@
 - [Funcionalidades](#funcionalidades)
 - [Prerequisitos](#prerequisitos)
 - [Lista de Paquetes](#lista-de-paquetes)
+- [Issues](#issues)
 
 
 ## Acerca de la App
@@ -89,6 +90,14 @@ AGENDA-COVID es una app para gestionar las consultas para recivir la vacuna de C
 - Muestra en tablas separadas cantidades por grupo y cantidades por rango de edades:
 
 ![Agendarme Empty Page](https://raw.githubusercontent.com/nicocadq/agenda-covid/main/docs/groups.JPG)
+
+---
+
+
+## Issues
+
+- Las cantidades de los grupos deben ser mostradas si hay una agenda ( por edades [DONE], por grupos [WIP])
+- Eliminar la agenda no el user [DONE]
 
 ---
 
