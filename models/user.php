@@ -40,7 +40,7 @@ class UserModel extends Database {
     }
 
     function delete_by_ci($ci){
-        $sql_query = 'UPDATE usuario SET activo='. 0 .' WHERE idUsuario='. $ci;
+        $sql_query = 'DELETE FROM agenda WHERE idUsuario='. $ci;
         $affected_rows = parent::update_data($sql_query);
         parent::close_connection();
         return $affected_rows == 1; 
