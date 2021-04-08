@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AGENDA COVID - Borrar</title>
+    <title>AGENDA COVID - Consultar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
 
     <style>
@@ -20,7 +20,7 @@
             <header class="navbar">
                 <div class="container">
                     <div class="navbar-brand">
-                        <a class="navbar-item" href="../index.php">
+                        <a class="navbar-item" href="../index.html">
                             AGENDA COVID
                         </a>
                         <!-- TODO: Add functionality to burger-menu -->
@@ -33,10 +33,10 @@
                     </div>
                     <div id="nav-menu" class="navbar-menu nav-menu">
                         <div class="navbar-end">
-                            <a class="navbar-item" href="./new.php">Agendarme</a>
-                            <a class="navbar-item" href="./show.php">Consultar agenda</a>
-                            <a class="navbar-item is-active" href="./delete.php">Borrar consulta</a>
-                            <a class="navbar-item" href="./list.php">Listar</a>
+                            <a class="navbar-item" href="./new.html">Agendarme</a>
+                            <a class="navbar-item is-active" href="./show.html">Consultar agenda</a>
+                            <a class="navbar-item" href="./delete.html">Borrar consulta</a>
+                            <a class="navbar-item" href="./list.html">Grupos</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
         <div class="hero-body">
             <div class="container">
                 <p class="title">
-                    Borrar consulta
+                    Consultar agenda
                 </p>
                 <div class="box">
                     <form id="check">
@@ -60,13 +60,14 @@
                             </div>
                         </div>
                         <p class="help">Ingrese su cedula sin puntos ni guiones</p>
-                        <p class="help is-danger" id="invalid-message" style="display: none;">No es posible eliminar la
-                            consulta.
+                        <p class="help is-danger" id="invalid-message" style="display: none;">La cedula ingresada no se
+                            encuentra en el sistema.
                         </p>
                     </form>
-                    <div id="success" class="block" style="display: none; margin-top: 1rem;">
-                        <div class="notification is-warning">
-                            <p>Consulta eliminada correctamente</p>
+                    <div id="dates" class="block" style="display: none; margin-top: 1rem;">
+                        <div class="notification is-success">
+                            <p>Primera Fecha : <span id="first-date"></span></p>
+                            <p>Segunda Fecha : <span id="second-date"></span></p>
                         </div>
                     </div>
                 </div>
@@ -82,12 +83,11 @@
 
     const getDatesRequest = async (ci) => {
         try {
-            const response = await fetch(`../controllers/agenda.php?ci=${ci}`, {
-                method: 'POST',
-            });
+            const response = await fetch(`../controllers/agenda.php?ci=${ci}`);
             const data = await response.json();
             if (!data.error) {
-                return true;
+                console.log(data)
+                return data;
             } else {
                 throw new Error(data.error);
             }
@@ -105,16 +105,22 @@
         invalidMessage.style.display = 'block';
     }
 
-    const showSuccessDeletedMessage = () => {
-        const successDeletedWarning = document.querySelector('#success');
-        successDeletedWarning.style.display = 'block';
+    const showDates = (first, second) => {
+        const firstDateContainer = document.querySelector('div#dates span#first-date');
+        const secondDateContainer = document.querySelector('div#dates span#second-date');
+        const datesContainer = document.querySelector('div#dates');
+
+        firstDateContainer.innerHTML = first;
+        secondDateContainer.innerHTML = second;
+
+        datesContainer.style.display = 'block';
     }
 
     checkCiSubmitButton.addEventListener('click', async () => {
         const ci = getCiValue();
-        const deleted = await getDatesRequest(ci);
-        if (deleted) {
-            showSuccessDeletedMessage();
+        const dates = await getDatesRequest(ci);
+        if (dates) {
+            showDates(dates.dateV1, dates.dateV2);
         } else {
             showInvalidCiMessage();
         }

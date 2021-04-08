@@ -4,8 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AGENDA COVID - Agendarme</title>
+    <title>AGENDA COVID - Borrar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+
+    <style>
+
+    </style>
+
 </head>
 
 <body>
@@ -15,7 +20,7 @@
             <header class="navbar">
                 <div class="container">
                     <div class="navbar-brand">
-                        <a class="navbar-item" href="../index.php">
+                        <a class="navbar-item" href="../index.html">
                             AGENDA COVID
                         </a>
                         <!-- TODO: Add functionality to burger-menu -->
@@ -28,10 +33,10 @@
                     </div>
                     <div id="nav-menu" class="navbar-menu nav-menu">
                         <div class="navbar-end">
-                            <a class="navbar-item is-active" href="./new.php">Agendarme</a>
-                            <a class="navbar-item" href="./show.php">Consultar agenda</a>
-                            <a class="navbar-item" href="./delete.php">Borrar consulta</a>
-                            <a class="navbar-item" href="./list.php">Grupos</a>
+                            <a class="navbar-item" href="./new.html">Agendarme</a>
+                            <a class="navbar-item" href="./show.html">Consultar agenda</a>
+                            <a class="navbar-item is-active" href="./delete.html">Borrar consulta</a>
+                            <a class="navbar-item" href="./list.html">Grupos</a>
                         </div>
                     </div>
                 </div>
@@ -39,9 +44,9 @@
         </div>
 
         <div class="hero-body">
-            <div class="container ">
+            <div class="container">
                 <p class="title">
-                    Crear nueva consulta
+                    Borrar consulta
                 </p>
                 <div class="box">
                     <form id="check">
@@ -55,26 +60,15 @@
                             </div>
                         </div>
                         <p class="help">Ingrese su cedula sin puntos ni guiones</p>
-                        <p class="help is-danger" id="invalid-message" style="display: none;">La cedula ingresada no se
-                            encuentra en el sistema.
+                        <p class="help is-danger" id="invalid-message" style="display: none;">No es posible eliminar la
+                            consulta.
                         </p>
                     </form>
-                    <form id="add-tel" style="display: none; margin-top: 3rem;">
-                        <div class="message is-primary" style="margin-bottom: 0;">
-                            <div class="message-header">
-                                <p>Se ha verificado su cedula correctamente</p>
-                            </div>
+                    <div id="success" class="block" style="display: none; margin-top: 1rem;">
+                        <div class="notification is-warning">
+                            <p>Consulta eliminada correctamente</p>
                         </div>
-                        <label class="label text-white" for="tel">Agrega tu telefono de contacto</label>
-                        <div class="field has-addons">
-                            <div class="control">
-                                <input class="input" id="tel" name="tel" type="tel" placeholder="Ej. 093674532">
-                            </div>
-                            <div class="control">
-                                <button class="button is-link" type="button">Submit</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,9 +80,11 @@
     const checkCiSubmitButton = document.querySelector('form#check button');
     const getCiValue = () => document.querySelector('form#check input#ci').value;
 
-    const checkRequest = async (ci) => {
+    const getDatesRequest = async (ci) => {
         try {
-            const response = await fetch(`../controllers/users.php?ci=${ci}`);
+            const response = await fetch(`../controllers/agenda.php?ci=${ci}`, {
+                method: 'POST',
+            });
             const data = await response.json();
             if (!data.error) {
                 return true;
@@ -109,56 +105,22 @@
         invalidMessage.style.display = 'block';
     }
 
-    const showAddTelForm = () => {
-        const addTelForm = document.querySelector('form#add-tel');
-        addTelForm.style.display = 'block';
+    const showSuccessDeletedMessage = () => {
+        const successDeletedWarning = document.querySelector('#success');
+        successDeletedWarning.style.display = 'block';
     }
 
     checkCiSubmitButton.addEventListener('click', async () => {
         const ci = getCiValue();
-        const isValid = await checkRequest(ci);
-        if (isValid) {
-            showAddTelForm();
+        const deleted = await getDatesRequest(ci);
+        if (deleted) {
+            showSuccessDeletedMessage();
         } else {
             showInvalidCiMessage();
         }
     });
     </script>
 
-    <script>
-    const addTelForm = document.querySelector('form#add-tel');
-    const addTelSubmitButton = document.querySelector('form#add-tel button');
-
-    const addTelRequest = async (ci) => {
-        try {
-            const formData = new FormData(addTelForm);
-            const response = await fetch(`../controllers/users.php?ci=${ci}`, {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-            if (!data.error) {
-                return true;
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
-
-    addTelSubmitButton.addEventListener('click', async () => {
-        const ci = getCiValue();
-        const added = await addTelRequest(ci);
-        if (added) {
-            // TODO: Add this methods
-            // showSuccessTelMessage();
-        } else {
-            // showErrorTelMessage();
-        }
-    });
-    </script>
 </body>
 
 </html>
