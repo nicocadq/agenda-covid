@@ -8,15 +8,17 @@ class GroupModel extends Database {
             SELECT usuario.idGrupo, grupo.nombre, COUNT(*) as cantidad
             FROM usuario INNER JOIN grupo 
             ON usuario.idGrupo=grupo.idGrupo 
-            GROUP BY usuario.idGrupo
+            INNER JOIN agenda ON usuario.idUsuario=agenda.idUsuario
+            GROUP BY usuario.idGrupo;
         ';
+        
         $data = parent::get_data($sql_query);
         parent::close_connection();
         return $data; 
     }
 
     function get_count_by_age() {
-            $sql_query = "
+        $sql_query = "
             SELECT 
                 CASE 
                     WHEN (TIMESTAMPDIFF(YEAR,fechaNacimiento,CURDATE()) BETWEEN 18 AND 30) THEN 'De 18 a 30'
@@ -24,8 +26,9 @@ class GroupModel extends Database {
                     WHEN (TIMESTAMPDIFF(YEAR,fechaNacimiento,CURDATE()) BETWEEN 51 AND 65) THEN 'De 51 a 65'
                 END as grupo,
             COUNT(*) as cantidad
-            FROM usuario INNER JOIN agenda ON agenda.idUsuario=usuario.IdUsuario
-            GROUP BY grupo";
+            FROM usuario INNER JOIN agenda ON agenda.idUsuario=usuario.idUsuario
+            GROUP BY grupo
+        ";
         
         $data = parent::get_data($sql_query);
         parent::close_connection();
