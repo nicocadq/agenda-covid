@@ -96,7 +96,7 @@ AGENDA-COVID es una app para gestionar las consultas para recivir la vacuna de C
 
 ## Issues
 
-- Las cantidades de los grupos deben ser mostradas si hay una agenda ( por edades [DONE], por grupos [WIP])
+- Las cantidades de los grupos deben ser mostradas si hay una agenda ( por edades [DONE], por grupos [DONE])
 - Eliminar la agenda no el user [DONE]
 
 ---
