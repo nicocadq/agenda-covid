@@ -4,6 +4,8 @@ include_once '../models/user.php';
 include_once '../models/agenda.php';
 
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -53,7 +55,7 @@ function post(){
     $user = new UserModel();
     $agenda = new AgendaModel();
 
-    $tel = isset($_POST['tel']) ? $_POST['tel'] : null;
+    $tel = isset($_POST['telephone']) ? $_POST['telephone'] : null;
     
     if($tel){
         $ci = $_GET['ci'];
@@ -73,7 +75,7 @@ function post(){
         }
     } else {
         http_response_code(400);
-        echo json_encode(['error' => 'Missing Tel param'], JSON_PRETTY_PRINT);
+        echo json_encode(['error' => 'Missing `telephone` param' . $tel], JSON_PRETTY_PRINT);
     }
 }
 

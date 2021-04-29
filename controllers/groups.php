@@ -3,6 +3,8 @@
 include_once '../models/group.php';
 
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 
 $method = $_SERVER['REQUEST_METHOD'];
 
